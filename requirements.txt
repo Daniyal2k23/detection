@@ -3,4 +3,4 @@ numpy
 pandas
 matplotlib
 tensorflow
-cv2
+opencv-python
