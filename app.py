@@ -1,12 +1,16 @@
 import streamlit as st
 import numpy as np
 import cv2
+import os
 from tensorflow.keras.models import load_model
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.utils import to_categorical
 
 # CIFAR-10 classes
 class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+
+# Define the path to save and load the model
+MODEL_PATH = 'cifar10_model.h5'
 
 def train_model():
     from tensorflow.keras.models import Sequential
@@ -65,11 +69,15 @@ def train_model():
               verbose=1)
 
     # Save model
-    model.save('cifar10_model.h5')
-    st.sidebar.success("Model trained and saved as cifar10_model.h5")
+    model.save(MODEL_PATH)
+    st.sidebar.success(f"Model trained and saved as {MODEL_PATH}")
 
 def predict_image(image):
-    model = load_model('cifar10_model.h5')
+    if not os.path.exists(MODEL_PATH):
+        st.sidebar.error(f"Model not found! Please train the model first.")
+        return None, None
+
+    model = load_model(MODEL_PATH)
 
     # Preprocess image
     image = cv2.resize(image, (32, 32))
@@ -105,9 +113,9 @@ elif option == "Predict Image":
         # Predict
         if st.button("Predict"):
             label, confidence = predict_image(image)
-            st.write(f"**Prediction:** {label}")
-            st.write(f"**Confidence:** {confidence * 100:.2f}%")
-            # Displaying additional information about the object
-            st.write(f"The object in the image is a **{label}**.")
-            st.write(f"The confidence level of this prediction is **{confidence * 100:.2f}%**.")
-
+            if label is not None:
+                st.write(f"**Prediction:** {label}")
+                st.write(f"**Confidence:** {confidence * 100:.2f}%")
+                # Displaying additional information about the object
+                st.write(f"The object in the image is a **{label}**.")
+                st.write(f"The confidence level of this prediction is **{confidence * 100:.2f}%**.")
