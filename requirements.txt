@@ -1,4 +1,5 @@
-streamlit==1.18.0
-numpy==1.24.0
-opencv-python-headless==4.7.0.72  # Use headless version for server deployment
-tensorflow==2.13.0
+streamlit
+numpy
+pandas
+matplotlib
+tensorflow
