@@ -1,0 +1,10 @@
+keras
+numpy
+opencv-python
+pandas
+streamlit
+tensorboard
+tensorboard-data-server
+tensorflow
+tensorflow-io-gcs-filesystem
+tensorflow_intel
