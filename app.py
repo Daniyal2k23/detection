@@ -1,12 +1,22 @@
 import streamlit as st
 import numpy as np
 import cv2
+import os
 from tensorflow.keras.models import load_model
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.utils import to_categorical
 
 # CIFAR-10 classes
 class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+
+# Load model function (only once)
+def load_trained_model():
+    if os.path.exists('cifar10_model.h5'):
+        model = load_model('cifar10_model.h5')
+        return model
+    else:
+        st.sidebar.error("Model not found. Please train the model first.")
+        return None
 
 def train_model():
     from tensorflow.keras.models import Sequential
@@ -69,7 +79,9 @@ def train_model():
     st.sidebar.success("Model trained and saved as cifar10_model.h5")
 
 def predict_image(image):
-    model = load_model('cifar10_model.h5')
+    model = load_trained_model()
+    if model is None:
+        return None, None
 
     # Preprocess image
     image = cv2.resize(image, (32, 32))
@@ -105,5 +117,8 @@ elif option == "Predict Image":
         # Predict
         if st.button("Predict"):
             label, confidence = predict_image(image)
-            st.write(f"**Prediction:** {label}")
-            st.write(f"**Confidence:** {confidence * 100:.2f}%")
+            if label:
+                st.write(f"**Prediction:** {label}")
+                st.write(f"**Confidence:** {confidence * 100:.2f}%")
+            else:
+                st.write("Please train the model first.")
