@@ -1,9 +1,10 @@
-opencv-python
-tensorflow
 keras
-streamlit
-scipy
 numpy
-matplotlib
-h5py
-Pillow
+opencv-python
+pandas
+streamlit
+tensorboard
+tensorboard-data-server
+tensorflow
+tensorflow-io-gcs-filesystem
+tensorflow_intel
